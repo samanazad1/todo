@@ -1,92 +1,209 @@
 <template>
   <div class="project-detail-view">
-    <div class="page-header">
-      <div class="header-left">
-        <router-link to="/projects" class="back-button">← Back</router-link>
-        <h1 class="page-title">Website Redesign</h1>
-      </div>
-      <button class="primary-button">
-        <span class="button-icon">+</span>
-        Add Task
-      </button>
-    </div>
+    <LoadingSpinner v-if="loading" />
+    <ErrorMessage v-else-if="error" :message="error" @retry="fetchProjectData" />
 
-    <div class="kanban-board">
-      <div v-for="column in columns" :key="column.id" class="board-column">
-        <div class="column-header">
-          <h3 class="column-title">{{ column.title }}</h3>
-          <span class="task-count">{{ column.tasks.length }}</span>
+    <template v-else>
+      <div class="page-header">
+        <div class="header-left">
+          <router-link to="/projects" class="back-button">← Back</router-link>
+          <h1 class="page-title">{{ project?.name || 'Project' }}</h1>
         </div>
-        <div class="column-tasks">
-          <div v-for="task in column.tasks" :key="task.id" class="task-card">
-            <h4 class="task-title">{{ task.title }}</h4>
-            <p class="task-description">{{ task.description }}</p>
-            <div class="task-footer">
-              <div class="task-labels">
-                <span v-for="label in task.labels" :key="label" class="task-label" :class="label">
-                  {{ label }}
-                </span>
+        <button class="primary-button" @click="addTask">
+          <span class="button-icon">+</span>
+          Add Task
+        </button>
+      </div>
+
+      <div class="kanban-board">
+        <div v-for="column in columns" :key="column.id" class="board-column">
+          <div class="column-header">
+            <h3 class="column-title">{{ column.title }}</h3>
+            <span class="task-count">{{ column.tasks.length }}</span>
+          </div>
+          <div class="column-tasks">
+            <div
+              v-for="task in column.tasks"
+              :key="task.id"
+              class="task-card"
+              draggable="true"
+              @dragstart="handleDragStart(task)"
+              @dragend="handleDragEnd"
+              @dragover.prevent
+              @drop="handleDrop(column.status)"
+            >
+              <h4 class="task-title">{{ task.title }}</h4>
+              <p v-if="task.description" class="task-description">{{ task.description }}</p>
+              <div class="task-footer">
+                <div class="task-labels">
+                  <span
+                    v-for="label in task.labels"
+                    :key="label.id"
+                    class="task-label"
+                    :style="{ backgroundColor: label.color }"
+                  >
+                    {{ label.name }}
+                  </span>
+                  <span v-if="task.priority === 'high' || task.priority === 'urgent'" class="task-label priority-high">
+                    {{ task.priority }}
+                  </span>
+                </div>
+                <div v-if="task.assignee" class="task-assignee" :title="task.assignee.name">
+                  {{ getInitials(task.assignee.name) }}
+                </div>
               </div>
-              <div class="task-assignee">{{ task.assignee }}</div>
+            </div>
+            <div v-if="column.tasks.length === 0" class="empty-column">
+              <p>No tasks in {{ column.title.toLowerCase() }}</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { projectService } from '@/services/projectService'
+import { taskService } from '@/services/taskService'
+import apiClient from '@/services/api'
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import ErrorMessage from '@/components/common/ErrorMessage.vue'
+import { useToast } from '@/composables/useToast'
 
-const columns = ref([
+const route = useRoute()
+const toast = useToast()
+
+const loading = ref(true)
+const error = ref(null)
+const project = ref(null)
+const tasks = ref([])
+const draggedTask = ref(null)
+
+const columns = computed(() => [
   {
     id: 'todo',
     title: 'To Do',
-    tasks: [
-      {
-        id: 1,
-        title: 'Design new homepage',
-        description: 'Create mockups for the new landing page',
-        labels: ['design', 'high'],
-        assignee: 'JD'
-      },
-      {
-        id: 2,
-        title: 'Update color scheme',
-        description: 'Implement new brand colors',
-        labels: ['design'],
-        assignee: 'JS'
-      }
-    ]
+    status: 'todo',
+    tasks: tasks.value.filter((t) => t.status === 'todo'),
   },
   {
-    id: 'inprogress',
+    id: 'in_progress',
     title: 'In Progress',
-    tasks: [
-      {
-        id: 3,
-        title: 'Implement navigation',
-        description: 'Build responsive navigation menu',
-        labels: ['development', 'high'],
-        assignee: 'MJ'
-      }
-    ]
+    status: 'in_progress',
+    tasks: tasks.value.filter((t) => t.status === 'in_progress'),
   },
   {
     id: 'done',
     title: 'Done',
-    tasks: [
-      {
-        id: 4,
-        title: 'Setup project repository',
-        description: 'Initialize Git repo and CI/CD',
-        labels: ['setup'],
-        assignee: 'JD'
-      }
-    ]
-  }
+    status: 'done',
+    tasks: tasks.value.filter((t) => t.status === 'done'),
+  },
 ])
+
+const fetchProjectData = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const projectId = route.params.id
+
+    // Fetch project details
+    const projectData = await projectService.getProject(projectId)
+    project.value = projectData
+
+    // Fetch tasks for this project with expanded data
+    const tasksData = await apiClient.get(
+      `/tasks?project_id=${projectId}&_expand=assignee&_sort=position&_order=asc`,
+    )
+
+    // Fetch labels for each task
+    const tasksWithLabels = await Promise.all(
+      tasksData.data.map(async (task) => {
+        try {
+          const taskLabels = await apiClient.get(`/task_labels?task_id=${task.id}`)
+          const labelIds = taskLabels.data.map((tl) => tl.label_id)
+
+          const labels =
+            labelIds.length > 0
+              ? await Promise.all(labelIds.map((labelId) => apiClient.get(`/labels/${labelId}`)))
+              : []
+
+          return {
+            ...task,
+            labels: labels.map((l) => l.data),
+          }
+        } catch (err) {
+          console.error(`Failed to fetch labels for task ${task.id}:`, err)
+          return { ...task, labels: [] }
+        }
+      }),
+    )
+
+    tasks.value = tasksWithLabels
+  } catch (err) {
+    error.value = err.message || 'Failed to load project data'
+    toast.error('Failed to load project data')
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleDragStart = (task) => {
+  draggedTask.value = task
+}
+
+const handleDragEnd = () => {
+  draggedTask.value = null
+}
+
+const handleDrop = async (newStatus) => {
+  if (!draggedTask.value || draggedTask.value.status === newStatus) {
+    return
+  }
+
+  const taskToUpdate = draggedTask.value
+  const oldStatus = taskToUpdate.status
+
+  try {
+    // Optimistic update
+    const taskIndex = tasks.value.findIndex((t) => t.id === taskToUpdate.id)
+    if (taskIndex !== -1) {
+      tasks.value[taskIndex].status = newStatus
+    }
+
+    // Update on server
+    await taskService.updateTaskStatus(taskToUpdate.id, newStatus)
+    toast.success(`Task moved to ${newStatus.replace('_', ' ')}`)
+  } catch (err) {
+    // Revert on error
+    const taskIndex = tasks.value.findIndex((t) => t.id === taskToUpdate.id)
+    if (taskIndex !== -1) {
+      tasks.value[taskIndex].status = oldStatus
+    }
+    toast.error('Failed to update task status')
+  }
+}
+
+const getInitials = (name) => {
+  if (!name) return '?'
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
+
+const addTask = () => {
+  toast.info('Add task feature coming soon!')
+}
+
+onMounted(() => {
+  fetchProjectData()
+})
 </script>
 
 <style scoped>
@@ -265,6 +382,18 @@ const columns = ref([
 .task-label.setup {
   background: #f3e8ff;
   color: #6b21a8;
+}
+
+.task-label.priority-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.empty-column {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
 }
 
 .task-assignee {

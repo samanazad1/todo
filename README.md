@@ -113,10 +113,25 @@ src/
 ```bash
 # Install dependencies
 npm install
+```
 
-# Start development server
+### Running the Application
+
+**You need to run BOTH servers simultaneously:**
+
+```bash
+# Terminal 1 - Start mock API server (required)
+npm run api
+# Runs on http://localhost:3000
+
+# Terminal 2 - Start development server
 npm run dev
+# Runs on http://localhost:5173
+```
 
+### Other Commands
+
+```bash
 # Build for production
 npm run build
 
@@ -128,6 +143,9 @@ npm run lint
 
 # Format code
 npm run format
+
+# Run tests
+npm run test
 ```
 
 ### Development Workflow
@@ -155,12 +173,18 @@ npm run format
 - [x] CI/CD pipeline (GitHub Actions)
 - [x] 3+ routes with Pinia store
 
-### 🔄 Milestone 2 — Data Model & API Layer
-- [ ] ERD for all entities
-- [ ] TypeScript/Zod types for entities
-- [ ] API service layer with Axios
-- [ ] Mock API or backend integration
-- [ ] Loading/error UI patterns
+### ✅ Milestone 2 — Data Model & API Layer
+- [x] ERD for all entities (8 entities documented)
+- [x] Zod validation schemas for all entities
+- [x] json-server mock API with 80+ seed records
+- [x] API service layer fully integrated
+- [x] Loading/error UI patterns across all views
+- [x] Toast notification system
+- [x] Connected all views to API (Home, Projects, ProjectDetail, Calendar)
+- [x] Drag-and-drop task status updates
+- [x] Dynamic calendar with month navigation
+
+**See `MILESTONE2_SUMMARY.md` for detailed completion report.**
 
 ## 🎨 Wireframes
 

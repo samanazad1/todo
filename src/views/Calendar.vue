@@ -1,98 +1,200 @@
 <template>
   <div class="calendar-view">
-    <div class="page-header">
-      <h1 class="page-title">Calendar</h1>
-      <div class="calendar-controls">
-        <button class="control-button">← Prev</button>
-        <span class="current-month">October 2025</span>
-        <button class="control-button">Next →</button>
+    <LoadingSpinner v-if="loading" />
+    <ErrorMessage v-else-if="error" :message="error" @retry="fetchTasks" />
+
+    <template v-else>
+      <div class="page-header">
+        <h1 class="page-title">Calendar</h1>
+        <div class="calendar-controls">
+          <button class="control-button" @click="previousMonth">← Prev</button>
+          <span class="current-month">{{ currentMonthName }} {{ currentYear }}</span>
+          <button class="control-button" @click="nextMonth">Next →</button>
+        </div>
       </div>
-    </div>
 
-    <div class="calendar-container">
-      <div class="calendar-grid">
-        <div class="calendar-header">Sun</div>
-        <div class="calendar-header">Mon</div>
-        <div class="calendar-header">Tue</div>
-        <div class="calendar-header">Wed</div>
-        <div class="calendar-header">Thu</div>
-        <div class="calendar-header">Fri</div>
-        <div class="calendar-header">Sat</div>
+      <div class="calendar-container">
+        <div class="calendar-grid">
+          <div class="calendar-header">Sun</div>
+          <div class="calendar-header">Mon</div>
+          <div class="calendar-header">Tue</div>
+          <div class="calendar-header">Wed</div>
+          <div class="calendar-header">Thu</div>
+          <div class="calendar-header">Fri</div>
+          <div class="calendar-header">Sat</div>
 
-        <div
-          v-for="day in calendarDays"
-          :key="day.date"
-          class="calendar-day"
-          :class="{ 'has-tasks': day.tasks.length > 0, today: day.isToday }"
-        >
-          <div class="day-number">{{ day.day }}</div>
-          <div class="day-tasks">
-            <div v-for="task in day.tasks" :key="task.id" class="calendar-task" :class="task.type">
-              {{ task.title }}
+          <div
+            v-for="day in calendarDays"
+            :key="day.date"
+            class="calendar-day"
+            :class="{
+              'has-tasks': day.tasks.length > 0,
+              today: day.isToday,
+              'other-month': !day.isCurrentMonth,
+            }"
+          >
+            <div class="day-number">{{ day.day }}</div>
+            <div class="day-tasks">
+              <div
+                v-for="task in day.tasks"
+                :key="task.id"
+                class="calendar-task"
+                :class="`priority-${task.priority}`"
+                :title="`${task.title} - ${task.project?.name || ''}`"
+              >
+                {{ task.title }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { taskService } from '@/services/taskService'
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import ErrorMessage from '@/components/common/ErrorMessage.vue'
+import { useToast } from '@/composables/useToast'
 
-const calendarDays = ref([
-  { date: '2025-10-01', day: 1, tasks: [], isToday: false },
-  { date: '2025-10-02', day: 2, tasks: [], isToday: false },
-  { date: '2025-10-03', day: 3, tasks: [], isToday: false },
-  { date: '2025-10-04', day: 4, tasks: [], isToday: false },
-  { date: '2025-10-05', day: 5, tasks: [], isToday: false },
-  { date: '2025-10-06', day: 6, tasks: [], isToday: false },
-  { date: '2025-10-07', day: 7, tasks: [], isToday: false },
-  { date: '2025-10-08', day: 8, tasks: [], isToday: false },
-  { date: '2025-10-09', day: 9, tasks: [], isToday: false },
-  { date: '2025-10-10', day: 10, tasks: [], isToday: false },
-  { date: '2025-10-11', day: 11, tasks: [], isToday: false },
-  { date: '2025-10-12', day: 12, tasks: [], isToday: false },
-  { date: '2025-10-13', day: 13, tasks: [], isToday: false },
-  { date: '2025-10-14', day: 14, tasks: [], isToday: false },
-  {
-    date: '2025-10-15',
-    day: 15,
-    tasks: [{ id: 1, title: 'Deploy V1', type: 'high' }],
-    isToday: false
-  },
-  { date: '2025-10-16', day: 16, tasks: [], isToday: false },
-  { date: '2025-10-17', day: 17, tasks: [], isToday: false },
-  {
-    date: '2025-10-18',
-    day: 18,
-    tasks: [{ id: 2, title: 'Team Meeting', type: 'normal' }],
-    isToday: true
-  },
-  { date: '2025-10-19', day: 19, tasks: [], isToday: false },
-  {
-    date: '2025-10-20',
-    day: 20,
-    tasks: [{ id: 3, title: 'Design Review', type: 'normal' }],
-    isToday: false
-  },
-  { date: '2025-10-21', day: 21, tasks: [], isToday: false },
-  { date: '2025-10-22', day: 22, tasks: [], isToday: false },
-  { date: '2025-10-23', day: 23, tasks: [], isToday: false },
-  { date: '2025-10-24', day: 24, tasks: [], isToday: false },
-  {
-    date: '2025-10-25',
-    day: 25,
-    tasks: [{ id: 4, title: 'Sprint End', type: 'high' }],
-    isToday: false
-  },
-  { date: '2025-10-26', day: 26, tasks: [], isToday: false },
-  { date: '2025-10-27', day: 27, tasks: [], isToday: false },
-  { date: '2025-10-28', day: 28, tasks: [], isToday: false },
-  { date: '2025-10-29', day: 29, tasks: [], isToday: false },
-  { date: '2025-10-30', day: 30, tasks: [], isToday: false },
-  { date: '2025-10-31', day: 31, tasks: [], isToday: false }
-])
+const loading = ref(true)
+const error = ref(null)
+const tasks = ref([])
+const currentMonth = ref(new Date().getMonth())
+const currentYear = ref(new Date().getFullYear())
+const toast = useToast()
+
+const currentMonthName = computed(() => {
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+  return monthNames[currentMonth.value]
+})
+
+const calendarDays = computed(() => {
+  const year = currentYear.value
+  const month = currentMonth.value
+
+  // Get first day of month and number of days
+  const firstDay = new Date(year, month, 1)
+  const lastDay = new Date(year, month + 1, 0)
+  const daysInMonth = lastDay.getDate()
+  const startingDayOfWeek = firstDay.getDay()
+
+  // Get previous month days to fill
+  const prevMonthLastDay = new Date(year, month, 0).getDate()
+  const daysFromPrevMonth = startingDayOfWeek
+
+  // Get today
+  const today = new Date()
+  const todayStr = today.toISOString().split('T')[0]
+
+  const days = []
+
+  // Add previous month days
+  for (let i = daysFromPrevMonth - 1; i >= 0; i--) {
+    const day = prevMonthLastDay - i
+    const date = new Date(year, month - 1, day)
+    const dateStr = date.toISOString().split('T')[0]
+
+    days.push({
+      date: dateStr,
+      day,
+      tasks: getTasksForDate(dateStr),
+      isToday: dateStr === todayStr,
+      isCurrentMonth: false,
+    })
+  }
+
+  // Add current month days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day)
+    const dateStr = date.toISOString().split('T')[0]
+
+    days.push({
+      date: dateStr,
+      day,
+      tasks: getTasksForDate(dateStr),
+      isToday: dateStr === todayStr,
+      isCurrentMonth: true,
+    })
+  }
+
+  // Add next month days to complete the grid (6 rows x 7 days = 42 cells)
+  const remainingDays = 42 - days.length
+  for (let day = 1; day <= remainingDays; day++) {
+    const date = new Date(year, month + 1, day)
+    const dateStr = date.toISOString().split('T')[0]
+
+    days.push({
+      date: dateStr,
+      day,
+      tasks: getTasksForDate(dateStr),
+      isToday: dateStr === todayStr,
+      isCurrentMonth: false,
+    })
+  }
+
+  return days
+})
+
+const getTasksForDate = (dateStr) => {
+  return tasks.value.filter((task) => {
+    if (!task.due_date) return false
+    const taskDate = new Date(task.due_date).toISOString().split('T')[0]
+    return taskDate === dateStr
+  })
+}
+
+const fetchTasks = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const data = await taskService.getTasks()
+    tasks.value = data.filter((task) => task.due_date && task.status !== 'done')
+  } catch (err) {
+    error.value = err.message || 'Failed to load calendar data'
+    toast.error('Failed to load calendar data')
+  } finally {
+    loading.value = false
+  }
+}
+
+const previousMonth = () => {
+  if (currentMonth.value === 0) {
+    currentMonth.value = 11
+    currentYear.value--
+  } else {
+    currentMonth.value--
+  }
+}
+
+const nextMonth = () => {
+  if (currentMonth.value === 11) {
+    currentMonth.value = 0
+    currentYear.value++
+  } else {
+    currentMonth.value++
+  }
+}
+
+onMounted(() => {
+  fetchTasks()
+})
 </script>
 
 <style scoped>
@@ -201,6 +303,10 @@ const calendarDays = ref([
   justify-content: center;
 }
 
+.calendar-day.other-month {
+  opacity: 0.4;
+}
+
 .day-number {
   font-weight: 600;
   color: #1f2937;
@@ -229,12 +335,22 @@ const calendarDays = ref([
   transform: scale(1.02);
 }
 
-.calendar-task.normal {
+.calendar-task.priority-low {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.calendar-task.priority-medium {
   background: #dbeafe;
   color: #1e40af;
 }
 
-.calendar-task.high {
+.calendar-task.priority-high {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.calendar-task.priority-urgent {
   background: #fee2e2;
   color: #991b1b;
 }
