@@ -37,9 +37,7 @@
         <button type="submit" class="login-button">Sign In</button>
       </form>
 
-      <p class="login-footer">
-        Demo credentials: admin@vuework.com / password
-      </p>
+      <p class="login-footer">Demo credentials: admin@vuework.com / password</p>
     </div>
   </div>
 </template>
@@ -157,7 +155,9 @@ function handleLogin() {
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   margin-top: 0.5rem;
 }
 

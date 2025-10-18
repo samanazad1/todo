@@ -74,9 +74,7 @@
         <div class="activity-item">
           <div class="activity-icon">💬</div>
           <div class="activity-content">
-            <p class="activity-text">
-              <strong>Jane Smith</strong> commented on "API Integration"
-            </p>
+            <p class="activity-text"><strong>Jane Smith</strong> commented on "API Integration"</p>
             <p class="activity-time">3 hours ago</p>
           </div>
         </div>
@@ -139,7 +137,9 @@
   align-items: center;
   gap: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .stats-card:hover {
