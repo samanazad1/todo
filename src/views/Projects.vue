@@ -1,77 +1,107 @@
 <template>
   <div class="projects-view">
-    <div class="page-header">
-      <h1 class="page-title">Projects</h1>
-      <button class="primary-button">
-        <span class="button-icon">+</span>
-        New Project
-      </button>
-    </div>
+    <LoadingSpinner v-if="loading" />
+    <ErrorMessage v-else-if="error" :message="error" @retry="fetchProjects" />
 
-    <div class="projects-grid">
-      <div v-for="project in mockProjects" :key="project.id" class="project-card">
-        <div class="project-header">
-          <h3 class="project-name">{{ project.name }}</h3>
-          <span class="project-status" :class="project.status">{{ project.status }}</span>
-        </div>
-        <p class="project-description">{{ project.description }}</p>
-        <div class="project-stats">
-          <div class="stat-item">
-            <span class="stat-icon">✓</span>
-            <span class="stat-text">{{ project.completedTasks }}/{{ project.totalTasks }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-icon">👥</span>
-            <span class="stat-text">{{ project.teamSize }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-icon">📅</span>
-            <span class="stat-text">{{ project.deadline }}</span>
-          </div>
-        </div>
-        <router-link :to="`/projects/${project.id}`" class="view-project-button">
-          View Board →
-        </router-link>
+    <template v-else>
+      <div class="page-header">
+        <h1 class="page-title">Projects</h1>
+        <button class="primary-button" @click="createProject">
+          <span class="button-icon">+</span>
+          New Project
+        </button>
       </div>
-    </div>
+
+      <div v-if="projects.length === 0" class="no-projects">
+        <p>No projects found. Create your first project to get started!</p>
+      </div>
+
+      <div v-else class="projects-grid">
+        <div v-for="project in projects" :key="project.id" class="project-card">
+          <div class="project-header">
+            <h3 class="project-name">{{ project.name }}</h3>
+            <span class="project-status" :class="project.status">{{ project.status }}</span>
+          </div>
+          <p class="project-description">{{ project.description }}</p>
+          <div class="project-stats">
+            <div class="stat-item">
+              <span class="stat-icon">✓</span>
+              <span class="stat-text"
+                >{{ project.completed_tasks || 0 }}/{{ project.total_tasks || 0 }}</span
+              >
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">👥</span>
+              <span class="stat-text">{{ project.member_count || 0 }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">📅</span>
+              <span class="stat-text">{{ formatDeadline(project.deadline) }}</span>
+            </div>
+          </div>
+          <router-link :to="`/projects/${project.id}`" class="view-project-button">
+            View Board →
+          </router-link>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { projectService } from '@/services/projectService'
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import ErrorMessage from '@/components/common/ErrorMessage.vue'
+import { useToast } from '@/composables/useToast'
 
-const mockProjects = ref([
-  {
-    id: 1,
-    name: 'Website Redesign',
-    description: 'Complete overhaul of company website with modern design',
-    status: 'active',
-    completedTasks: 12,
-    totalTasks: 24,
-    teamSize: 5,
-    deadline: 'Dec 31'
-  },
-  {
-    id: 2,
-    name: 'Mobile App Launch',
-    description: 'Develop and launch iOS/Android mobile application',
-    status: 'active',
-    completedTasks: 8,
-    totalTasks: 30,
-    teamSize: 4,
-    deadline: 'Jan 15'
-  },
-  {
-    id: 3,
-    name: 'Marketing Campaign',
-    description: 'Q4 marketing campaign for product launch',
-    status: 'completed',
-    completedTasks: 15,
-    totalTasks: 15,
-    teamSize: 3,
-    deadline: 'Oct 30'
+const loading = ref(true)
+const error = ref(null)
+const projects = ref([])
+const toast = useToast()
+
+const fetchProjects = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const data = await projectService.getProjects()
+
+    // Fetch stats for each project
+    const projectsWithStats = await Promise.all(
+      data.map(async (project) => {
+        try {
+          const stats = await projectService.getProjectWithStats(project.id)
+          return stats
+        } catch (err) {
+          console.error(`Failed to fetch stats for project ${project.id}:`, err)
+          return project
+        }
+      }),
+    )
+
+    projects.value = projectsWithStats
+  } catch (err) {
+    error.value = err.message || 'Failed to load projects'
+    toast.error('Failed to load projects')
+  } finally {
+    loading.value = false
   }
-])
+}
+
+const formatDeadline = (deadline) => {
+  if (!deadline) return 'No deadline'
+  const date = new Date(deadline)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+const createProject = () => {
+  toast.info('Create project feature coming soon!')
+}
+
+onMounted(() => {
+  fetchProjects()
+})
 </script>
 
 <style scoped>
@@ -118,6 +148,13 @@ const mockProjects = ref([
 
 .button-icon {
   font-size: 1.25rem;
+}
+
+.no-projects {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #9ca3af;
+  font-size: 1.125rem;
 }
 
 .projects-grid {

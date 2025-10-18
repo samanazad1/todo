@@ -1,0 +1,677 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@vuework.com",
+      "role": "admin",
+      "avatar_url": "https://ui-avatars.com/api/?name=John+Doe&background=3b82f6&color=fff",
+      "created_at": "2025-10-01T08:00:00.000Z",
+      "updated_at": "2025-10-18T14:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@vuework.com",
+      "role": "member",
+      "avatar_url": "https://ui-avatars.com/api/?name=Jane+Smith&background=ec4899&color=fff",
+      "created_at": "2025-10-01T08:00:00.000Z",
+      "updated_at": "2025-10-18T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Mike Johnson",
+      "email": "mike.johnson@vuework.com",
+      "role": "member",
+      "avatar_url": "https://ui-avatars.com/api/?name=Mike+Johnson&background=10b981&color=fff",
+      "created_at": "2025-10-01T08:00:00.000Z",
+      "updated_at": "2025-10-15T16:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Sarah Williams",
+      "email": "sarah.williams@vuework.com",
+      "role": "member",
+      "avatar_url": "https://ui-avatars.com/api/?name=Sarah+Williams&background=f59e0b&color=fff",
+      "created_at": "2025-10-02T09:00:00.000Z",
+      "updated_at": "2025-10-17T11:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Tom Brown",
+      "email": "tom.brown@vuework.com",
+      "role": "member",
+      "avatar_url": "https://ui-avatars.com/api/?name=Tom+Brown&background=8b5cf6&color=fff",
+      "created_at": "2025-10-03T10:00:00.000Z",
+      "updated_at": "2025-10-16T14:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "name": "Emma Davis",
+      "email": "emma.davis@vuework.com",
+      "role": "viewer",
+      "avatar_url": "https://ui-avatars.com/api/?name=Emma+Davis&background=ef4444&color=fff",
+      "created_at": "2025-10-05T11:00:00.000Z",
+      "updated_at": "2025-10-18T09:00:00.000Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Website Redesign",
+      "description": "Complete overhaul of company website with modern design and improved UX",
+      "owner_id": 1,
+      "status": "active",
+      "deadline": "2025-12-31",
+      "created_at": "2025-10-01T09:00:00.000Z",
+      "updated_at": "2025-10-18T10:15:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Mobile App Development",
+      "description": "Native iOS and Android app for customer engagement",
+      "owner_id": 1,
+      "status": "active",
+      "deadline": "2026-03-15",
+      "created_at": "2025-10-05T10:00:00.000Z",
+      "updated_at": "2025-10-17T15:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Marketing Campaign Q4",
+      "description": "Social media and email marketing campaign for Q4 2025",
+      "owner_id": 2,
+      "status": "active",
+      "deadline": "2025-12-15",
+      "created_at": "2025-10-08T11:00:00.000Z",
+      "updated_at": "2025-10-18T08:45:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "API Integration",
+      "description": "Integrate third-party payment and shipping APIs",
+      "owner_id": 3,
+      "status": "active",
+      "deadline": "2025-11-30",
+      "created_at": "2025-10-10T09:00:00.000Z",
+      "updated_at": "2025-10-18T14:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Internal Tools Upgrade",
+      "description": "Update and modernize internal admin tools",
+      "owner_id": 1,
+      "status": "completed",
+      "deadline": "2025-10-15",
+      "created_at": "2025-09-01T08:00:00.000Z",
+      "updated_at": "2025-10-15T17:00:00.000Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Design new homepage",
+      "description": "Create mockups for the new landing page with hero section, features, and testimonials",
+      "project_id": 1,
+      "assignee_id": 2,
+      "status": "in_progress",
+      "priority": "high",
+      "due_date": "2025-10-25T23:59:59.000Z",
+      "position": 0,
+      "created_at": "2025-10-15T09:30:00.000Z",
+      "updated_at": "2025-10-18T14:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Update navigation structure",
+      "description": "Redesign the main navigation menu with improved categorization",
+      "project_id": 1,
+      "assignee_id": 3,
+      "status": "todo",
+      "priority": "medium",
+      "due_date": "2025-10-28T23:59:59.000Z",
+      "position": 1,
+      "created_at": "2025-10-15T10:00:00.000Z",
+      "updated_at": "2025-10-17T11:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Implement responsive layouts",
+      "description": "Ensure all pages work seamlessly on mobile, tablet, and desktop",
+      "project_id": 1,
+      "assignee_id": 4,
+      "status": "todo",
+      "priority": "high",
+      "due_date": "2025-11-05T23:59:59.000Z",
+      "position": 2,
+      "created_at": "2025-10-15T10:30:00.000Z",
+      "updated_at": "2025-10-16T09:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "title": "Optimize images and assets",
+      "description": "Compress and optimize all images for faster loading times",
+      "project_id": 1,
+      "assignee_id": 5,
+      "status": "done",
+      "priority": "medium",
+      "due_date": "2025-10-20T23:59:59.000Z",
+      "position": 3,
+      "created_at": "2025-10-15T11:00:00.000Z",
+      "updated_at": "2025-10-18T16:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Write accessibility improvements",
+      "description": "Add ARIA labels and ensure WCAG 2.1 AA compliance",
+      "project_id": 1,
+      "assignee_id": 2,
+      "status": "in_progress",
+      "priority": "medium",
+      "due_date": "2025-11-10T23:59:59.000Z",
+      "position": 4,
+      "created_at": "2025-10-16T09:00:00.000Z",
+      "updated_at": "2025-10-18T10:30:00.000Z"
+    },
+    {
+      "id": 6,
+      "title": "Setup iOS development environment",
+      "description": "Configure Xcode and necessary dependencies for iOS development",
+      "project_id": 2,
+      "assignee_id": 3,
+      "status": "done",
+      "priority": "high",
+      "due_date": "2025-10-20T23:59:59.000Z",
+      "position": 0,
+      "created_at": "2025-10-10T09:00:00.000Z",
+      "updated_at": "2025-10-18T11:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "title": "Design app UI screens",
+      "description": "Create designs for login, dashboard, profile, and settings screens",
+      "project_id": 2,
+      "assignee_id": 2,
+      "status": "in_progress",
+      "priority": "high",
+      "due_date": "2025-10-30T23:59:59.000Z",
+      "position": 1,
+      "created_at": "2025-10-12T10:00:00.000Z",
+      "updated_at": "2025-10-18T15:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "title": "Implement user authentication",
+      "description": "Build login and registration flows with JWT authentication",
+      "project_id": 2,
+      "assignee_id": 4,
+      "status": "todo",
+      "priority": "urgent",
+      "due_date": "2025-11-05T23:59:59.000Z",
+      "position": 2,
+      "created_at": "2025-10-13T11:00:00.000Z",
+      "updated_at": "2025-10-17T14:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "title": "Build product catalog",
+      "description": "Create browsable product catalog with search and filters",
+      "project_id": 2,
+      "assignee_id": 5,
+      "status": "todo",
+      "priority": "medium",
+      "due_date": "2025-11-15T23:59:59.000Z",
+      "position": 3,
+      "created_at": "2025-10-14T09:00:00.000Z",
+      "updated_at": "2025-10-16T10:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "title": "Create social media content calendar",
+      "description": "Plan posts for Facebook, Instagram, Twitter, and LinkedIn",
+      "project_id": 3,
+      "assignee_id": 2,
+      "status": "done",
+      "priority": "high",
+      "due_date": "2025-10-22T23:59:59.000Z",
+      "position": 0,
+      "created_at": "2025-10-10T08:00:00.000Z",
+      "updated_at": "2025-10-18T09:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "title": "Design email templates",
+      "description": "Create responsive email templates for promotional campaigns",
+      "project_id": 3,
+      "assignee_id": 2,
+      "status": "in_progress",
+      "priority": "high",
+      "due_date": "2025-10-28T23:59:59.000Z",
+      "position": 1,
+      "created_at": "2025-10-11T09:00:00.000Z",
+      "updated_at": "2025-10-18T13:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "title": "Setup Google Analytics tracking",
+      "description": "Implement tracking for campaign performance metrics",
+      "project_id": 3,
+      "assignee_id": 4,
+      "status": "todo",
+      "priority": "medium",
+      "due_date": "2025-10-30T23:59:59.000Z",
+      "position": 2,
+      "created_at": "2025-10-12T10:00:00.000Z",
+      "updated_at": "2025-10-15T11:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "title": "Research payment gateway options",
+      "description": "Compare Stripe, PayPal, and Square for integration",
+      "project_id": 4,
+      "assignee_id": 3,
+      "status": "done",
+      "priority": "high",
+      "due_date": "2025-10-18T23:59:59.000Z",
+      "position": 0,
+      "created_at": "2025-10-12T08:00:00.000Z",
+      "updated_at": "2025-10-18T10:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "title": "Integrate Stripe payment API",
+      "description": "Implement Stripe checkout and payment processing",
+      "project_id": 4,
+      "assignee_id": 3,
+      "status": "in_progress",
+      "priority": "urgent",
+      "due_date": "2025-10-25T23:59:59.000Z",
+      "position": 1,
+      "created_at": "2025-10-13T09:00:00.000Z",
+      "updated_at": "2025-10-18T14:30:00.000Z"
+    },
+    {
+      "id": 15,
+      "title": "Setup shipping API integration",
+      "description": "Integrate with FedEx and UPS APIs for shipping rates",
+      "project_id": 4,
+      "assignee_id": 5,
+      "status": "todo",
+      "priority": "high",
+      "due_date": "2025-11-01T23:59:59.000Z",
+      "position": 2,
+      "created_at": "2025-10-14T10:00:00.000Z",
+      "updated_at": "2025-10-17T09:00:00.000Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "task_id": 1,
+      "user_id": 3,
+      "content": "Should we include a video in the hero section? @john.doe what do you think?",
+      "created_at": "2025-10-18T11:20:00.000Z",
+      "updated_at": "2025-10-18T11:20:00.000Z"
+    },
+    {
+      "id": 2,
+      "task_id": 1,
+      "user_id": 1,
+      "content": "@mike.johnson Great idea! Let's add a short 30-second explainer video.",
+      "created_at": "2025-10-18T11:45:00.000Z",
+      "updated_at": "2025-10-18T11:45:00.000Z"
+    },
+    {
+      "id": 3,
+      "task_id": 7,
+      "user_id": 4,
+      "content": "The design looks great! Just a few minor tweaks needed on the profile screen.",
+      "created_at": "2025-10-18T14:20:00.000Z",
+      "updated_at": "2025-10-18T14:20:00.000Z"
+    },
+    {
+      "id": 4,
+      "task_id": 11,
+      "user_id": 1,
+      "content": "Make sure the email templates are tested across all major email clients.",
+      "created_at": "2025-10-18T10:00:00.000Z",
+      "updated_at": "2025-10-18T10:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "task_id": 14,
+      "user_id": 1,
+      "content": "Don't forget to implement webhook handlers for payment confirmations.",
+      "created_at": "2025-10-18T13:30:00.000Z",
+      "updated_at": "2025-10-18T13:30:00.000Z"
+    },
+    {
+      "id": 6,
+      "task_id": 14,
+      "user_id": 3,
+      "content": "Already working on it! Will have it ready by tomorrow.",
+      "created_at": "2025-10-18T14:00:00.000Z",
+      "updated_at": "2025-10-18T14:00:00.000Z"
+    }
+  ],
+  "labels": [
+    {
+      "id": 1,
+      "name": "design",
+      "color": "#EC4899",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "development",
+      "color": "#3B82F6",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "bug",
+      "color": "#EF4444",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "feature",
+      "color": "#10B981",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "enhancement",
+      "color": "#F59E0B",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "name": "documentation",
+      "color": "#8B5CF6",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "name": "testing",
+      "color": "#06B6D4",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "name": "high-priority",
+      "color": "#DC2626",
+      "created_at": "2025-10-01T08:00:00.000Z"
+    }
+  ],
+  "project_members": [
+    {
+      "id": 1,
+      "project_id": 1,
+      "user_id": 1,
+      "role": "owner",
+      "joined_at": "2025-10-01T09:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "project_id": 1,
+      "user_id": 2,
+      "role": "member",
+      "joined_at": "2025-10-05T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "project_id": 1,
+      "user_id": 3,
+      "role": "member",
+      "joined_at": "2025-10-05T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "project_id": 1,
+      "user_id": 4,
+      "role": "member",
+      "joined_at": "2025-10-06T11:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "project_id": 1,
+      "user_id": 5,
+      "role": "member",
+      "joined_at": "2025-10-07T09:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "project_id": 2,
+      "user_id": 1,
+      "role": "owner",
+      "joined_at": "2025-10-05T10:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "project_id": 2,
+      "user_id": 3,
+      "role": "admin",
+      "joined_at": "2025-10-05T11:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "project_id": 2,
+      "user_id": 4,
+      "role": "member",
+      "joined_at": "2025-10-06T09:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "project_id": 2,
+      "user_id": 5,
+      "role": "member",
+      "joined_at": "2025-10-07T10:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "project_id": 3,
+      "user_id": 2,
+      "role": "owner",
+      "joined_at": "2025-10-08T11:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "project_id": 3,
+      "user_id": 4,
+      "role": "member",
+      "joined_at": "2025-10-08T12:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "project_id": 4,
+      "user_id": 3,
+      "role": "owner",
+      "joined_at": "2025-10-10T09:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "project_id": 4,
+      "user_id": 5,
+      "role": "member",
+      "joined_at": "2025-10-10T10:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "project_id": 5,
+      "user_id": 1,
+      "role": "owner",
+      "joined_at": "2025-09-01T08:00:00.000Z"
+    }
+  ],
+  "task_labels": [
+    {
+      "task_id": 1,
+      "label_id": 1
+    },
+    {
+      "task_id": 1,
+      "label_id": 8
+    },
+    {
+      "task_id": 2,
+      "label_id": 1
+    },
+    {
+      "task_id": 3,
+      "label_id": 2
+    },
+    {
+      "task_id": 3,
+      "label_id": 8
+    },
+    {
+      "task_id": 4,
+      "label_id": 2
+    },
+    {
+      "task_id": 5,
+      "label_id": 2
+    },
+    {
+      "task_id": 5,
+      "label_id": 5
+    },
+    {
+      "task_id": 6,
+      "label_id": 2
+    },
+    {
+      "task_id": 7,
+      "label_id": 1
+    },
+    {
+      "task_id": 7,
+      "label_id": 8
+    },
+    {
+      "task_id": 8,
+      "label_id": 2
+    },
+    {
+      "task_id": 8,
+      "label_id": 8
+    },
+    {
+      "task_id": 9,
+      "label_id": 2
+    },
+    {
+      "task_id": 9,
+      "label_id": 4
+    },
+    {
+      "task_id": 10,
+      "label_id": 6
+    },
+    {
+      "task_id": 11,
+      "label_id": 1
+    },
+    {
+      "task_id": 11,
+      "label_id": 8
+    },
+    {
+      "task_id": 12,
+      "label_id": 2
+    },
+    {
+      "task_id": 13,
+      "label_id": 6
+    },
+    {
+      "task_id": 14,
+      "label_id": 2
+    },
+    {
+      "task_id": 14,
+      "label_id": 8
+    },
+    {
+      "task_id": 15,
+      "label_id": 2
+    },
+    {
+      "task_id": 15,
+      "label_id": 8
+    }
+  ],
+  "activity_logs": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "action": "status_changed",
+      "entity_type": "task",
+      "entity_id": 1,
+      "old_value": { "status": "todo" },
+      "new_value": { "status": "in_progress" },
+      "timestamp": "2025-10-18T14:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "user_id": 5,
+      "action": "completed",
+      "entity_type": "task",
+      "entity_id": 4,
+      "old_value": { "status": "in_progress" },
+      "new_value": { "status": "done" },
+      "timestamp": "2025-10-18T16:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "action": "created",
+      "entity_type": "project",
+      "entity_id": 1,
+      "old_value": null,
+      "new_value": { "name": "Website Redesign", "status": "active" },
+      "timestamp": "2025-10-01T09:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "user_id": 3,
+      "action": "commented",
+      "entity_type": "task",
+      "entity_id": 1,
+      "old_value": null,
+      "new_value": { "comment_id": 1 },
+      "timestamp": "2025-10-18T11:20:00.000Z"
+    },
+    {
+      "id": 5,
+      "user_id": 2,
+      "action": "assigned",
+      "entity_type": "task",
+      "entity_id": 7,
+      "old_value": { "assignee_id": null },
+      "new_value": { "assignee_id": 2 },
+      "timestamp": "2025-10-18T15:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "user_id": 3,
+      "action": "completed",
+      "entity_type": "task",
+      "entity_id": 13,
+      "old_value": { "status": "in_progress" },
+      "new_value": { "status": "done" },
+      "timestamp": "2025-10-18T10:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "user_id": 1,
+      "action": "updated",
+      "entity_type": "project",
+      "entity_id": 5,
+      "old_value": { "status": "active" },
+      "new_value": { "status": "completed" },
+      "timestamp": "2025-10-15T17:00:00.000Z"
+    }
+  ]
+}

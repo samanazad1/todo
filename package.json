@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "api": "json-server --watch db.json --port 3000",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix",
     "format": "prettier --write src/",
     "test": "vitest",
@@ -19,7 +20,8 @@
     "axios": "^1.12.2",
     "pinia": "^3.0.3",
     "vue": "^3.5.22",
-    "vue-router": "^4.6.3"
+    "vue-router": "^4.6.3",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
@@ -31,6 +33,7 @@
     "eslint-plugin-vue": "^10.5.1",
     "globals": "^16.4.0",
     "happy-dom": "^20.0.5",
+    "json-server": "^1.0.0-beta.3",
     "prettier": "^3.6.2",
     "vite": "^5.4.20",
     "vitest": "^3.2.4"

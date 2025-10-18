@@ -27,7 +27,7 @@ export const taskService = {
 
   // Update task status
   async updateTaskStatus(id, status) {
-    const response = await apiClient.patch(`/tasks/${id}/status`, { status })
+    const response = await apiClient.patch(`/tasks/${id}`, { status })
     return response.data
   },
 
@@ -39,13 +39,43 @@ export const taskService = {
 
   // Add comment to task
   async addComment(taskId, comment) {
-    const response = await apiClient.post(`/tasks/${taskId}/comments`, { content: comment })
+    const commentData = {
+      task_id: taskId,
+      user_id: 1, // TODO: Get from auth store
+      content: comment,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }
+    const response = await apiClient.post('/comments', commentData)
     return response.data
   },
 
   // Get task comments
   async getComments(taskId) {
-    const response = await apiClient.get(`/tasks/${taskId}/comments`)
+    const response = await apiClient.get(`/comments?task_id=${taskId}&_expand=user`)
     return response.data
+  },
+
+  // Get task with relations (assignee, labels, comments)
+  async getTaskWithRelations(id) {
+    const [task, comments] = await Promise.all([
+      apiClient.get(`/tasks/${id}?_expand=assignee&_expand=project`),
+      apiClient.get(`/comments?task_id=${id}&_expand=user`),
+    ])
+
+    // Get task labels
+    const taskLabels = await apiClient.get(`/task_labels?task_id=${id}`)
+    const labelIds = taskLabels.data.map((tl) => tl.label_id)
+
+    const labels =
+      labelIds.length > 0
+        ? await Promise.all(labelIds.map((labelId) => apiClient.get(`/labels/${labelId}`)))
+        : []
+
+    return {
+      ...task.data,
+      labels: labels.map((l) => l.data),
+      comments: comments.data,
+    }
   }
 }

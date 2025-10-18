@@ -33,7 +33,26 @@ export const projectService = {
 
   // Get project tasks
   async getProjectTasks(projectId) {
-    const response = await apiClient.get(`/projects/${projectId}/tasks`)
+    const response = await apiClient.get(`/tasks?project_id=${projectId}`)
     return response.data
+  },
+
+  // Get project with stats
+  async getProjectWithStats(id) {
+    const [project, tasks, members] = await Promise.all([
+      apiClient.get(`/projects/${id}`),
+      apiClient.get(`/tasks?project_id=${id}`),
+      apiClient.get(`/project_members?project_id=${id}&_expand=user`),
+    ])
+
+    const completedTasks = tasks.data.filter((t) => t.status === 'done').length
+
+    return {
+      ...project.data,
+      total_tasks: tasks.data.length,
+      completed_tasks: completedTasks,
+      member_count: members.data.length,
+      members: members.data.map((m) => m.user),
+    }
   }
 }
